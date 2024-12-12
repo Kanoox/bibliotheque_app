@@ -1,5 +1,6 @@
 // Importation des bibliothèques //
 const express = require('express');
+const fs = require('fs');
 const bcrypt = require('bcryptjs'); 
 const bodyParser = require('body-parser');
 const session = require('express-session'); // Session avec express js
@@ -22,6 +23,32 @@ app.set('views', path.join(__dirname, 'views'));
   console.log('Headers de la requête:', req.headers); // Affiche les headers dans la console
   next(); // Passe au middleware suivant ou à la route
 });*/
+
+// Middleware de journalisation
+function loggerMiddleware(req, res, next) {
+    const logFilePath = path.join(__dirname, 'requests.log');
+    const logEntry = `${new Date().toISOString()} - ${req.method} ${req.url}\n`;
+
+    // Append log au fichier
+    fs.appendFile(logFilePath, logEntry, (err) => {
+        if (err) {
+            console.error('Erreur lors de l\'écriture du journal:', err);
+        }
+    });
+
+    // Passer au middleware suivant
+    next();
+}
+
+// Ajouter le middleware
+app.use(loggerMiddleware);
+//
+
+app.use((req, res, next) => {
+    console.log(`Request URL: ${req.url}`);
+    next();
+});
+
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -112,7 +139,7 @@ app.get('/dashboard', (req, res) => {
 });
 
 // Bibliotheque page
-app.get('/bibliotheque', (req, res) => {
+/* app.get('/bibliotheque', (req, res) => {
     const data = {
         title: 'Bibliotheque - Bienvenue sur ExpressJS',
         message: "C'est une page dynamique avec EJS !",
@@ -128,12 +155,24 @@ app.get('/bibliotheque', (req, res) => {
         }
     })
     res.render('bibliotheque', data);  // Render the "index.ejs" template
+}); */
+
+app.get('/bibliotheque', (req, res) => {
+    res.render('bibliotheque'); // register.ejs doit être dans le dossier 'views'
+});
+
+// Page d'enregistrement utilisateur
+app.get('/login', (req, res) => {
+    if (req.session.user) {
+        return res.redirect('/bibliotheque'); // Redirection vers le dashboard si la personne est connectée
+    }
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
 // Handle login
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-
+    console.log(username,password);
     if (!username || !password) {
         return res.status(400).send("Nom d'utilisateur et mot de passe requis !");
     }
