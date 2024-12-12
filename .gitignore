@@ -13,3 +13,6 @@ dist/
 
 #MACOS
 .DS_Store
+
+#Fichier de journalisation
+requests.log
