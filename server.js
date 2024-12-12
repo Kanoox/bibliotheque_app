@@ -56,15 +56,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: SECRET_KEY,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: { secure: false } // 'secure: true' nécessite HTTPS
 }));
 
 app.get('/', (req, res) => {
+    const error = req.session.error;
+    req.session.error = null; // Effacez le message après affichage
     if (req.session.user) {
         // Si l’utilisateur est connecté, rediriger vers la bibliothèque
+        console.log("connecté")
         return res.redirect('/bibliotheque');
     } else {
-        res.sendFile(path.join(__dirname, 'views', 'login.html'));
+        res.render('login', { error }); // Passez le message à la vue
+        //res.sendFile(path.join(__dirname, 'views', 'login.ejs'));
     }
 });
 
@@ -73,7 +78,7 @@ app.get('/register', (req, res) => {
     if (req.session.user) {
         return res.redirect('/bibliotheque'); // Redirection vers le dashboard si la personne est connectée
     }
-    res.sendFile(path.join(__dirname, 'views', 'register.html'));
+    res.render('register'); // 'ma-page' est le nom du fichier .ejs sans extension
 });
 
 // Page d'enregistrement
@@ -139,40 +144,33 @@ app.get('/dashboard', (req, res) => {
 });
 
 // Bibliotheque page
-/* app.get('/bibliotheque', (req, res) => {
-    const data = {
-        title: 'Bibliotheque - Bienvenue sur ExpressJS',
-        message: "C'est une page dynamique avec EJS !",
-    };
-    const query = 'SELECT * FROM `emprunt`'
-    mysql.query(query,function(err,results, fields){
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(results);
-            console.log(fields);
-            console.log("Aucune erreur");
-        }
-    })
-    res.render('bibliotheque', data);  // Render the "index.ejs" template
-}); */
-
 app.get('/bibliotheque', (req, res) => {
-    res.render('bibliotheque'); // register.ejs doit être dans le dossier 'views'
+    if(req.session.user){
+        return res.render('bibliotheque'); // register.ejs doit être dans le dossier 'views'
+    }else{
+        // Simuler une erreur
+        const error = "Please log in to have access to the library";
+        // Stocker l'erreur dans la session
+        req.session.error = error;
+
+        // Rediriger vers la page d'accueil
+        res.redirect('/');
+    }
 });
+
 
 // Page d'enregistrement utilisateur
 app.get('/login', (req, res) => {
     if (req.session.user) {
         return res.redirect('/bibliotheque'); // Redirection vers le dashboard si la personne est connectée
     }
-    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+    res.redirect('/'); // 'ma-page' est le nom du fichier .ejs sans extension
 });
 
 // Handle login
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    console.log(username,password);
+    //console.log(username,password);
     if (!username || !password) {
         return res.status(400).send("Nom d'utilisateur et mot de passe requis !");
     }
@@ -195,7 +193,9 @@ app.post('/login', async (req, res) => {
             // Compare le mot de passe fourni au mot de passe haché et vérifie si c'est le même
             const isMatch = await bcrypt.compare(password, hashedPassword);
             if (isMatch) {
-                res.status(200).send(`<h1>Authentifaction réussie, ${req.session.user}!</h1><a href="/bibliotheque">Bibliotheque</a>`);
+                //res.status(200).send(`<h1>Authentifaction réussie, ${req.session.user}!</h1><a href="/bibliotheque">Bibliotheque</a>`);
+                req.session.user = { username }; // Stocker les informations de l'utilisateur
+                return res.redirect('/bibliotheque');
             } else {
                 res.status(401).send('Informations d’identification non valides');
             }
