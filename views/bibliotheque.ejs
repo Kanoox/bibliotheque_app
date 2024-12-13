@@ -61,7 +61,9 @@
         }
 
         .mon-compte button:hover {
-            background: #5a3d7a;
+            background: #5a3d7a; /* Couleur légèrement plus foncée */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre douce */
+            transform: translateY(-1px); /* Légère élévation du bouton */
         }
 
         .select-livre {
@@ -114,6 +116,31 @@
             color: #dc3545;
             font-weight: bold;
         }
+        .logout {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        } 
+
+        .logout button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            background: #764ba2;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .logout button:hover {
+            background: #5a3d7a; /* Couleur légèrement plus foncée */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre douce */
+            transform: translateY(-1px); /* Légère élévation du bouton */
+        }
+
+        
     </style>
 </head>
 <body>
@@ -121,6 +148,10 @@
         <!-- Bouton Mon Compte -->
         <div class="mon-compte">
             <button onclick="ouvrirMonCompte()">Mon compte</button>
+        </div>
+
+        <div class="logout">
+            <button onclick="deconnexion()">Déconnexion</button>
         </div>
 
         <h1>Bibliothèque</h1>
@@ -194,6 +225,10 @@
         // Fonction pour ouvrir la section Mon Compte
         function ouvrirMonCompte() {
             window.location.href = "/dashboard";
+        }
+
+        function deconnexion(){
+            window.location.href = "/logout";
         }
     </script>
 </body>
