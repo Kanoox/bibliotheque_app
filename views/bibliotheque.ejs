@@ -6,7 +6,7 @@
     <title>Bibliothèque</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Reset */
+        /* Styles existants */
         * {
             margin: 0;
             padding: 0;
@@ -42,37 +42,13 @@
             color: #764ba2;
         }
 
-        .mon-compte {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
-        .mon-compte button {
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #fff;
-            background: #764ba2;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .mon-compte button:hover {
-            background: #5a3d7a; /* Couleur légèrement plus foncée */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre douce */
-            transform: translateY(-1px); /* Légère élévation du bouton */
-        }
-
-        .select-livre {
+        .search-bar {
             margin-bottom: 20px;
             display: flex;
             justify-content: center;
         }
 
-        select {
+        .search-bar input {
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ddd;
@@ -116,120 +92,60 @@
             color: #dc3545;
             font-weight: bold;
         }
-        .logout {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        } 
-
-        .logout button {
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #fff;
-            background: #764ba2;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-        }
-
-        .logout button:hover {
-            background: #5a3d7a; /* Couleur légèrement plus foncée */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre douce */
-            transform: translateY(-1px); /* Légère élévation du bouton */
-        }
-
-        
     </style>
 </head>
 <body>
     <div class="bibliotheque-container">
-        <!-- Bouton Mon Compte -->
-        <div class="mon-compte">
-            <button onclick="ouvrirMonCompte()">Mon compte</button>
-        </div>
-
-        <div class="logout">
-            <button onclick="deconnexion()">Déconnexion</button>
-        </div>
-
         <h1>Bibliothèque</h1>
 
-        <!-- Liste déroulante -->
-        <div class="select-livre">
-            <select id="livre-select" onchange="afficherLivre()">
-                <option value="0">Sélectionnez un livre</option>
-                <option value="1">Le Seigneur des Anneaux</option>
-                <option value="2">1984</option>
-                <option value="3">Le Petit Prince</option>
-            </select>
+        <!-- Barre de recherche -->
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Rechercher un livre..." oninput="rechercherLivre()">
         </div>
 
-        <!-- Conteneur pour afficher le livre sélectionné -->
-        <div id="livre-details">
-            <!-- Les détails des livres seront affichés ici -->
+        <!-- Conteneur pour afficher les livres filtrés -->
+        <div id="livre-list">
+            <!-- Les détails des livres filtrés seront affichés ici -->
         </div>
     </div>
 
     <script>
         // Données des livres
         const livres = [
-            {
-                titre: "Le Seigneur des Anneaux",
-                auteur: "J.R.R. Tolkien",
-                genre: "Fantasy",
-                annee: 1954,
-                etat: "Disponible"
-            },
-            {
-                titre: "1984",
-                auteur: "George Orwell",
-                genre: "Dystopie",
-                annee: 1949,
-                etat: "Emprunté"
-            },
-            {
-                titre: "Le Petit Prince",
-                auteur: "Antoine de Saint-Exupéry",
-                genre: "Conte",
-                annee: 1943,
-                etat: "Disponible"
-            }
+            { titre: "Le Seigneur des Anneaux", auteur: "J.R.R. Tolkien", genre: "Fantasy", annee: 1954, etat: "Disponible" },
+            { titre: "1984", auteur: "George Orwell", genre: "Dystopie", annee: 1949, etat: "Emprunté" },
+            { titre: "Le Petit Prince", auteur: "Antoine de Saint-Exupéry", genre: "Conte", annee: 1943, etat: "Disponible" },
         ];
 
-        // Fonction pour afficher les détails du livre
-        function afficherLivre() {
-            const select = document.getElementById('livre-select');
-            const livreIndex = select.value - 1;
-            const livreDetails = document.getElementById('livre-details');
-
-            if (livreIndex >= 0) {
-                const livre = livres[livreIndex];
-                livreDetails.innerHTML = `
-                    <div class="livre">
-                        <h2>${livre.titre}</h2>
-                        <p><strong>Auteur :</strong> ${livre.auteur}</p>
-                        <p><strong>Genre :</strong> ${livre.genre}</p>
-                        <p><strong>Année de publication :</strong> ${livre.annee}</p>
-                        <p><strong>État :</strong> 
-                            <span class="${livre.etat === 'Disponible' ? 'disponible' : 'emprunte'}">${livre.etat}</span>
-                        </p>
-                    </div>
-                `;
-            } else {
-                livreDetails.innerHTML = ''; // Vider les détails si aucun livre n'est sélectionné
-            }
+        // Afficher tous les livres au départ
+        function afficherLivres(livresFiltres) {
+            const livreList = document.getElementById('livre-list');
+            livreList.innerHTML = livresFiltres.map(livre => `
+                <div class="livre">
+                    <h2>${livre.titre}</h2>
+                    <p><strong>Auteur :</strong> ${livre.auteur}</p>
+                    <p><strong>Genre :</strong> ${livre.genre}</p>
+                    <p><strong>Année de publication :</strong> ${livre.annee}</p>
+                    <p><strong>État :</strong> 
+                        <span class="${livre.etat === 'Disponible' ? 'disponible' : 'emprunte'}">${livre.etat}</span>
+                    </p>
+                </div>
+            `).join('');
         }
 
-        // Fonction pour ouvrir la section Mon Compte
-        function ouvrirMonCompte() {
-            window.location.href = "/dashboard";
+        // Fonction de recherche
+        function rechercherLivre() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const livresFiltres = livres.filter(livre =>
+                livre.titre.toLowerCase().includes(query) ||
+                livre.auteur.toLowerCase().includes(query) ||
+                livre.genre.toLowerCase().includes(query)
+            );
+            afficherLivres(livresFiltres);
         }
 
-        function deconnexion(){
-            window.location.href = "/logout";
-        }
+        // Initialisation : afficher tous les livres
+        afficherLivres(livres);
     </script>
 </body>
 </html>
