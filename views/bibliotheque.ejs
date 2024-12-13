@@ -161,21 +161,25 @@
         <div class="search-bar">
             <input type="text" id="search-input" placeholder="Rechercher un livre..." oninput="rechercherLivre()">
         </div>
-
         <!-- Conteneur pour afficher les livres filtrés -->
         <div id="livre-list">
             <!-- Les détails des livres filtrés seront affichés ici -->
         </div>
+        
     </div>
 
     <script>
-        // Données des livres
-        const livres = [
+        // Passage des données au côté frontend du JS
+        const livres = <%- JSON.stringify(livres) %>; // Inclure les données dans une variable JS
+        //console.log('Données des livres côté client :', livres);
+
+        // Données local des livres
+/*         const livres = [
             { titre: "Le Seigneur des Anneaux", auteur: "J.R.R. Tolkien", genre: "Fantasy", annee: 1954, etat: "Disponible" },
             { titre: "1984", auteur: "George Orwell", genre: "Dystopie", annee: 1949, etat: "Emprunté" },
             { titre: "1984", auteur: "George Orwell", genre: "Dystopie", annee: 1949, etat: "Emprunté" },
             { titre: "Le Petit Prince", auteur: "Antoine de Saint-Exupéry", genre: "Conte", annee: 1943, etat: "Disponible" },
-        ];
+        ]; */
 
         // Afficher tous les livres au départ
         function afficherLivres(livresFiltres) {
@@ -206,7 +210,7 @@
         
         // Fonction pour ouvrir la section Mon Compte
         function ouvrirMonCompte() {
-            window.location.href = "/dashboard";
+            //window.location.href = "/dashboard";
         }
 
         function deconnexion(){

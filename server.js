@@ -142,7 +142,7 @@ app.get('/dashboard', (req, res) => {
     } else {
         const query = 'SELECT * FROM membre WHERE username = ?'
         mysql.query(query, [username], (err, results, fields) => {
-            console.log(results);
+            //console.log(results);
             if (err) {
                 console.error('Erreur lors de la récupération des données :', err);
                 res.status(500).send('Erreur serveur.');
@@ -163,7 +163,15 @@ app.get('/dashboard', (req, res) => {
 // Bibliotheque page
 app.get('/bibliotheque', (req, res) => {
     if(req.session.user){
-        return res.render('bibliotheque'); // register.ejs doit être dans le dossier 'views'
+        mysql.query('SELECT * FROM livre', function (err, results, fields) {
+            if (err) {
+                console.error('Erreur lors de la récupération des données:', err);
+                return res.status(500).send('Erreur serveur');
+            }
+            //console.log(results)
+            // Rendre la vue avec les données
+            res.render('bibliotheque', { livres: results }); // Passer les données à EJS
+        });
     }else{
         // Simuler une erreur
         const error = "Please log in to have access to the library";
