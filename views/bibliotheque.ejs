@@ -58,7 +58,7 @@
         }
 
         .livre {
-            margin-bottom: 20px;
+            margin: 20px 5px 20px 5px;
             padding: 20px;
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -92,10 +92,69 @@
             color: #dc3545;
             font-weight: bold;
         }
+
+        .mon-compte {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+            }
+
+            .mon-compte button {
+                padding: 10px 20px;
+                font-size: 14px;
+                font-weight: bold;
+                color: #fff;
+                background: #764ba2;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            #livre-list{
+                max-height: 600px; /* Limite de hauteur du conteneur */
+                overflow-y: auto; /* Activer le défilement vertical */
+            }
+            .mon-compte button:hover {
+                background: #5a3d7a; /* Couleur légèrement plus foncée */
+                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre douce */
+                transform: translateY(-1px); /* Légère élévation du bouton */
+            }
+
+            .logout {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+            } 
+
+            .logout button {
+                padding: 10px 20px;
+                font-size: 14px;
+                font-weight: bold;
+                color: #fff;
+                background: #764ba2;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            }
+
+            .logout button:hover {
+                background: #5a3d7a; /* Couleur légèrement plus foncée */
+                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre douce */
+                transform: translateY(-1px); /* Légère élévation du bouton */
+            }
     </style>
 </head>
 <body>
     <div class="bibliotheque-container">
+        <!-- Bouton Mon Compte -->
+        <div class="mon-compte">
+            <button onclick="ouvrirMonCompte()">Mon compte</button>
+        </div>
+
+        <div class="logout">
+            <button onclick="deconnexion()">Déconnexion</button>
+        </div>
         <h1>Bibliothèque</h1>
 
         <!-- Barre de recherche -->
@@ -113,6 +172,7 @@
         // Données des livres
         const livres = [
             { titre: "Le Seigneur des Anneaux", auteur: "J.R.R. Tolkien", genre: "Fantasy", annee: 1954, etat: "Disponible" },
+            { titre: "1984", auteur: "George Orwell", genre: "Dystopie", annee: 1949, etat: "Emprunté" },
             { titre: "1984", auteur: "George Orwell", genre: "Dystopie", annee: 1949, etat: "Emprunté" },
             { titre: "Le Petit Prince", auteur: "Antoine de Saint-Exupéry", genre: "Conte", annee: 1943, etat: "Disponible" },
         ];
@@ -142,6 +202,15 @@
                 livre.genre.toLowerCase().includes(query)
             );
             afficherLivres(livresFiltres);
+        }
+        
+        // Fonction pour ouvrir la section Mon Compte
+        function ouvrirMonCompte() {
+            window.location.href = "/dashboard";
+        }
+
+        function deconnexion(){
+            window.location.href = "/logout";
         }
 
         // Initialisation : afficher tous les livres
