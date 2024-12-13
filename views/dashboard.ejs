@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Compte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #764ba2;
+        }
+
+        .info {
+            margin-bottom: 20px;
+        }
+
+        .info p {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .info p span {
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .btn-retour {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-retour button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            background: #764ba2;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-retour button:hover {
+            background: #5a3d7a;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Mon Compte</h1>
+
+        <div class="info">
+            <p><span>Nom :</span> Dupont</p>
+            <p><span>Prénom :</span> Jean</p>
+            <p><span>Adresse :</span> 123 rue des Lilas, Paris</p>
+            <p><span>Téléphone :</span> 01 23 45 67 89</p>
+            <p><span>Mail :</span> jean.dupont@example.com</p>
+            <p><span>Rôle :</span> Administrateur</p>
+            <p><span>Nom d'utilisateur :</span> jdupont</p>
+        </div>
+
+        <div class="btn-retour">
+            <button onclick="retourBibliotheque()">Retour à la bibliothèque</button>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour revenir à la page bibliothèque
+        function retourBibliotheque() {
+            window.location.href = "/";
+        }
+    </script>
+</body>
+</html>
