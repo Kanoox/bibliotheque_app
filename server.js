@@ -136,11 +136,28 @@ app.post('/register', async (req, res) => {
 })
 // Page dashboard, authentication obligatoire
 app.get('/dashboard', (req, res) => {
+    const username = 'test';
     if (!req.session.user) {
         return res.redirect('/');
-    }
+    } else {
+        const query = 'SELECT * FROM membre WHERE username = ?'
+        mysql.query(query, [username], (err, results, fields) => {
+            console.log(results);
+            if (err) {
+                console.error('Erreur lors de la récupération des données :', err);
+                res.status(500).send('Erreur serveur.');
+                return;
+            }
 
-    res.send(`<h1>Bienvenue sur le dashboard utilisateur, ${req.session.user}!</h1><a href="/logout">Logout</a>`);
+            if (results.length === 0) {
+                res.send('Utilisateur non trouvé.');
+                return;
+            }
+            
+            const user = results[0]; // Donnée de l'utilisateur;
+            return res.render('dashboard'); // register.ejs doit être dans le dossier 'views'
+        });
+    }
 });
 
 // Bibliotheque page
