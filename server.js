@@ -64,8 +64,6 @@ app.get('/', (req, res) => {
     const error = req.session.error;
     req.session.error = null; // Effacez le message après affichage
     if (req.session.user) {
-        // Si l’utilisateur est connecté, rediriger vers la bibliothèque
-        console.log("connecté")
         return res.redirect('/bibliotheque');
     } else {
         res.render('login', { error }); // Passez le message à la vue
@@ -235,6 +233,43 @@ app.post('/login', async (req, res) => {
 app.get('/logout', (req, res) => {
     req.session.destroy(() => {
         res.redirect('/');
+    });
+});
+
+app.get('/edit_profil', (req, res) => {
+    if(req.session.user){
+        res.render('edit_profil', { user: req.session.user });
+    } else{
+        res.redirect('/');
+    }
+})
+
+// Route pour traiter la mise à jour du profil
+app.post('/edit_profil', (req, res) => {
+    // Récupérer les données du formulaire
+    const { nom, prenom, adresse, telephone, mail } = req.body;
+    const username = req.session.user.username;
+
+    // Requête SQL pour mettre à jour les données
+    const query = `
+        UPDATE membre 
+        SET nom = ?, prenom = ?, adresse = ?, telephone = ?, mail = ?
+        WHERE username = ?
+    `;
+
+    // Paramètres pour éviter les injections SQL
+    const values = [nom, prenom, adresse, telephone, mail, username];
+
+    // Exécution de la requête
+    mysql.query(query, values, (err, result) => {
+        if (err) {
+            console.error('Erreur lors de la mise à jour du profil :', err);
+            return res.status(500).send('Erreur serveur lors de la mise à jour.');
+        }
+
+        console.log(`Profil de ${username} mis à jour avec succès.`);
+        // Rediriger vers la page dashboard ou afficher un message de confirmation
+        res.redirect('/dashboard');
     });
 });
 

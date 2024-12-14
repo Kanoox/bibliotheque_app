@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier Mon Profil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .profile-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #764ba2;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #764ba2;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .form-group input:focus {
+            border-color: #764ba2;
+            outline: none;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .form-actions button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background: #764ba2;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #5a3d7a;
+        }
+
+        .btn-secondary {
+            background: #ddd;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h1>Modifier Mon Profil</h1>
+        <form action="/edit_profil" method="POST">
+            <div class="form-group">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" value="<%= user.nom ? user.nom : '' %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" value="<%= user.prenom ? user.prenom : '' %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="adresse">Adresse :</label>
+                <input type="text" id="adresse" name="adresse" pattern="^[a-zA-Z0-9\s,.'-]{3,}$" title="L'adresse doit contenir au moins 3 caractères (lettres, chiffres, espaces et ponctuations autorisées)." value="<%= user.adresse ? user.adresse : '' %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telephone">Téléphone :</label>
+                <input type="tel" id="telephone" pattern="[0-9]{10}" name="telephone" title="Veuillez entrer un numéro à 10 chiffres."  value="<%= user.telephone ? user.telephone : '' %>"required>
+            </div>
+
+            <div class="form-group">
+                <label for="mail">Mail :</label>
+                <input type="email" id="mail" name="mail" value="<%= user.mail ? user.mail : '' %>" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Enregistrer</button>
+                <button type="button" class="btn-secondary" onclick="retourDashboard()">Annuler</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function retourDashboard() {
+            window.location.href = "/dashboard"; // Redirige vers la page du dashboard
+        }
+    </script>
+</body>
+</html>

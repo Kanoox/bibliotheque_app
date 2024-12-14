@@ -71,7 +71,9 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.2s;
+            margin: 0 5px; /* Ajoute une marge horizontale entre les boutons */
         }
+
 
         .btn-retour button:hover {
             background: #5a3d7a;
@@ -94,18 +96,21 @@
 
         <div class="btn-retour">
             <button onclick="retourBibliotheque()">Retour à la bibliothèque</button>
+            <button onclick="modifierDonnees()">Modifier mes données</button>
         </div>
+        
     </div>
 
     <script>
-        // Passage des données au côté frontend du JS
-        const user = <%- JSON.stringify(user) %>; // Inclure les données dans une variable JS
-
         // Fonction pour revenir à la page bibliothèque
         function retourBibliotheque() {
-            console.log(user);
-            //window.location.href = "/";
+            window.location.href = "/";
         }
+
+        function modifierDonnees() {
+            window.location.href = "/edit_profil";
+        }   
+
     </script>
 </body>
 </html>
