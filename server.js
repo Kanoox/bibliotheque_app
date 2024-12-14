@@ -115,7 +115,7 @@ app.post('/register', async (req, res) => {
                             const hashedPassword = await bcrypt.hash(password, 10); // 10 est le "salt rounds"
                             
                             // Enregistrer l'utilisateur avec le mot de passe haché
-                            mysql.query('INSERT INTO membre (mail, username, password) VALUES (?, ?, ?)', [mail, username, hashedPassword],function (err, results, fields){
+                            mysql.query('INSERT INTO membre (mail, username, password, role) VALUES (?, ?, ?, ?)', [mail, username, hashedPassword, "user"],function (err, results, fields){
                                 console.log(err);
                                 console.log(results);
                                 console.log(fields);
@@ -140,7 +140,7 @@ app.get('/dashboard', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/');
     } else {
-        const query = 'SELECT * FROM membre WHERE username = ?'
+        const query = 'SELECT nom, prenom, adresse, telephone, mail, role, username FROM membre WHERE username = ?'
         mysql.query(query, [username], (err, results, fields) => {
             //console.log(results);
             if (err) {
@@ -153,9 +153,9 @@ app.get('/dashboard', (req, res) => {
                 res.send('Utilisateur non trouvé.');
                 return;
             }
-            
+
             const user = results[0]; // Donnée de l'utilisateur;
-            return res.render('dashboard'); // register.ejs doit être dans le dossier 'views'
+            return res.render('dashboard', {user: results[0]}); // register.ejs doit être dans le dossier 'views'
         });
     }
 });

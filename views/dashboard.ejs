@@ -83,13 +83,13 @@
         <h1>Mon Compte</h1>
 
         <div class="info">
-            <p><span>Nom :</span> Dupont</p>
-            <p><span>Prénom :</span> Jean</p>
-            <p><span>Adresse :</span> 123 rue des Lilas, Paris</p>
-            <p><span>Téléphone :</span> 01 23 45 67 89</p>
-            <p><span>Mail :</span> jean.dupont@example.com</p>
-            <p><span>Rôle :</span> Administrateur</p>
-            <p><span>Nom d'utilisateur :</span> jdupont</p>
+            <p><span>Nom : </span><%= user.nom ? user.nom : "Non défini" %></p>
+            <p><span>Prénom : </span><%= user.prenom ? user.prenom : "Non défini" %></p>
+            <p><span>Adresse : </span><%= user.adresse ? user.adresse : "Non défini" %></p>
+            <p><span>Téléphone : </span><%= user.telephone ? user.telephone : "Non défini"%></p>
+            <p><span>Mail : </span><%= user.mail ? user.mail : "Non défini"%></p>
+            <p><span>Rôle : </span><%= user.role ? user.role : "Non défini"%></p>
+            <p><span>Nom d'utilisateur : </span><%= user.username ? user.username : "Non défini"%></p>
         </div>
 
         <div class="btn-retour">
@@ -98,9 +98,13 @@
     </div>
 
     <script>
+        // Passage des données au côté frontend du JS
+        const user = <%- JSON.stringify(user) %>; // Inclure les données dans une variable JS
+
         // Fonction pour revenir à la page bibliothèque
         function retourBibliotheque() {
-            window.location.href = "/";
+            console.log(user);
+            //window.location.href = "/";
         }
     </script>
 </body>
