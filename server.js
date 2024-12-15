@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
     if (req.session.user) {
         return res.redirect('/bibliotheque');
     } else {
-        res.render('login', { error }); // Passez le message à la vue
+        res.render('login', { error}); // Passez le message à la vue
         //res.sendFile(path.join(__dirname, 'views', 'login.ejs'));
     }
 });
@@ -48,9 +48,9 @@ app.get('/', (req, res) => {
 // Page d'enregistrement utilisateur
 app.get('/register', (req, res) => {
     if (req.session.user) {
-        return res.redirect('/bibliotheque'); // Redirection vers le dashboard si la personne est connectée
+        return res.redirect('/bibliotheque');
     }
-    res.render('register'); // 'ma-page' est le nom du fichier .ejs sans extension
+    res.render('register');
 });
 
 // Page d'enregistrement
@@ -88,14 +88,20 @@ app.post('/register', async (req, res) => {
                             
                             // Enregistrer l'utilisateur avec le mot de passe haché
                             mysql.query('INSERT INTO membre (mail, username, password, role) VALUES (?, ?, ?, ?)', [mail, username, hashedPassword, "user"],function (err, results, fields){
-                                console.log(err);
-                                console.log(results);
-                                console.log(fields);
+                                if (err) {
+                                    console.error('Erreur lors de l\'insertion des données :', err.message);
+                                    return;
+                                }
+                            
+                                if (results.affectedRows === 1) {
+                                    console.log('Données insérées avec succès !');
+                                    console.log('Nouvel ID :', results.insertId);
+                                    res.redirect('/login');
+                                } else {
+                                    console.log('Aucune ligne affectée, vérifiez vos données.');
+                                }
                             })
-                            console.log(hashedPassword);
-                            // Register the new user
-                            req.session.user = username; // Log the user in automatically after registration
-                            res.send(`<h1>Enregistrement confirmée ! Bienvenue, ${username}!</h1><a href="/logout">Logout</a>`);
+
                         }
                     }
                 })
@@ -252,17 +258,38 @@ app.post('/edit_profil', (req, res) => {
     const values = [nom, prenom, adresse, telephone, mail, username];
 
     // Exécution de la requête
-    mysql.query(query, values, (err, result) => {
+    mysql.query(query, values, (err, result, fields) => {
         if (err) {
             console.error('Erreur lors de la mise à jour du profil :', err);
             return res.status(500).send('Erreur serveur lors de la mise à jour.');
         }
 
         console.log(`Profil de ${username} mis à jour avec succès.`);
-        // Redirection vers la page dashboard ou afficher un message de confirmation
         res.redirect('/dashboard');
     });
 });
+
+// Suppression d'un compte
+app.get('/delete_account', (req, res) => {
+    if (req.session.user) {
+        const username = req.session.user.username;
+        // Requête SQL pour supprimer le compte
+        mysql.query('DELETE FROM membre WHERE username = ?', [username], (err, result, fields) => {
+            if (err) {
+                console.error('Erreur lors de la mise à jour du profil :', err);
+                return res.status(500).send('Erreur serveur lors de la mise à jour.');
+            }
+
+            console.log(`Profil de ${username} supprimer avec succès.`);
+            console.log(result);
+            req.session.destroy(() => {
+                res.redirect('/');
+            });
+        });
+    } else {
+        res.redirect('/');
+    }
+})
 
 // Lancement du serveur
 const primaryPort = process.env.PORT;
