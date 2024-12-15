@@ -24,16 +24,6 @@ app.set('views', path.join(__dirname, 'views'));
   next(); // Passe au middleware suivant ou à la route
 });*/
 
-// Ajouter le middleware
-app.use(loggerMiddleware);
-//
-
-app.use((req, res, next) => {
-    console.log(`Request URL: ${req.url}`);
-    next();
-});
-
-
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));

@@ -1,3 +1,7 @@
+const fs = require('fs');
+const express = require('express');
+const app = express();
+
 // Middleware de journalisation
 function loggerMiddleware(req, res, next) {
     const logFilePath = path.join(__dirname, 'requests.log');
@@ -13,3 +17,12 @@ function loggerMiddleware(req, res, next) {
     // Passer au middleware suivant
     next();
 }
+
+app.use((req, res, next) => {
+    console.log(`Request URL: ${req.url}`);
+    next();
+});
+
+// Ajouter le middleware
+app.use(loggerMiddleware);
+//
