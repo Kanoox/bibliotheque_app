@@ -237,8 +237,25 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/edit_profil', (req, res) => {
+    const username = req.session.user.username;
     if(req.session.user){
-        res.render('edit_profil', { user: req.session.user });
+        const query = 'SELECT nom, prenom, adresse, telephone, mail, role, username FROM membre WHERE username = ?'
+        mysql.query(query, [username], (err, results, fields) => {
+            //console.log(results);
+            if (err) {
+                console.error('Erreur lors de la récupération des données :', err);
+                res.status(500).send('Erreur serveur.');
+                return;
+            }
+
+            if (results.length === 0) {
+                res.send('Utilisateur non trouvé.');
+                return;
+            }
+
+            const user = results[0]; // Donnée de l'utilisateur;
+            return res.render('edit_profil', {user: results[0]}); // register.ejs doit être dans le dossier 'views'
+        });
     } else{
         res.redirect('/');
     }
@@ -268,7 +285,7 @@ app.post('/edit_profil', (req, res) => {
         }
 
         console.log(`Profil de ${username} mis à jour avec succès.`);
-        // Rediriger vers la page dashboard ou afficher un message de confirmation
+        // Redirection vers la page dashboard ou afficher un message de confirmation
         res.redirect('/dashboard');
     });
 });

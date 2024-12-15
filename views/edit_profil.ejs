@@ -120,7 +120,7 @@
 
             <div class="form-group">
                 <label for="adresse">Adresse :</label>
-                <input type="text" id="adresse" name="adresse" pattern="^[a-zA-Z0-9\s,.'-]{3,}$" title="L'adresse doit contenir au moins 3 caractères (lettres, chiffres, espaces et ponctuations autorisées)." value="<%= user.adresse ? user.adresse : '' %>" required>
+                <input type="text" id="adresse" name="adresse" value="<%= user.adresse ? user.adresse : '' %>" required>
             </div>
 
             <div class="form-group">
