@@ -209,13 +209,6 @@ app.post('/login', async (req, res) => {
     });
 });
 
-// Handle logout
-app.get('/logout', (req, res) => {
-    req.session.destroy(() => {
-        res.redirect('/');
-    });
-});
-
 app.get('/edit_profil', (req, res) => {
     const username = req.session.user.username;
     if(req.session.user){
@@ -234,7 +227,7 @@ app.get('/edit_profil', (req, res) => {
             }
 
             const user = results[0]; // Donnée de l'utilisateur;
-            return res.render('edit_profil', {user: results[0]}); // register.ejs doit être dans le dossier 'views'
+            return res.render('edit_profil', {user: results[0]});
         });
     } else{
         res.redirect('/');
