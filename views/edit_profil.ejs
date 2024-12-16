@@ -109,23 +109,23 @@
         <h1>Modifier Mon Profil</h1>
         <form action="/edit_profil" method="POST">
             <div class="form-group">
-                <label for="nom">Nom :</label>
-                <input type="text" id="nom" name="nom" value="<%= user.nom ? user.nom : '' %>" required>
-            </div>
-
-            <div class="form-group">
-                <label for="prenom">Prénom :</label>
+                <label for="prenom">First Name :</label>
                 <input type="text" id="prenom" name="prenom" value="<%= user.prenom ? user.prenom : '' %>" required>
             </div>
 
             <div class="form-group">
-                <label for="adresse">Adresse :</label>
+                <label for="nom">Last Name :</label>
+                <input type="text" id="nom" name="nom" value="<%= user.nom ? user.nom : '' %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="adresse">Adress :</label>
                 <input type="text" id="adresse" name="adresse" value="<%= user.adresse ? user.adresse : '' %>" required>
             </div>
 
             <div class="form-group">
-                <label for="telephone">Téléphone :</label>
-                <input type="tel" id="telephone" pattern="[0-9]{10}" name="telephone" title="Veuillez entrer un numéro à 10 chiffres."  value="<%= user.telephone ? user.telephone : '' %>"required>
+                <label for="telephone">Tel :</label>
+                <input type="tel" id="telephone" pattern="[0-9]{10}" name="telephone" title="Please enter a 10-digit number."  value="<%= user.telephone ? user.telephone : '' %>"required>
             </div>
 
             <div class="form-group">
@@ -134,8 +134,8 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-primary">Enregistrer</button>
-                <button type="button" class="btn-secondary" onclick="retourDashboard()">Annuler</button>
+                <button type="submit" class="btn-primary">Register</button>
+                <button type="button" class="btn-secondary" onclick="retourDashboard()">Cancel</button>
             </div>
         </form>
     </div>

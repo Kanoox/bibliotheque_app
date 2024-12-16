@@ -90,22 +90,22 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <h1>Mon Compte</h1>
+        <h1>My account</h1>
 
         <div class="info">
-            <p><span>Nom : </span><%= user.nom ? user.nom : "Non défini" %></p>
-            <p><span>Prénom : </span><%= user.prenom ? user.prenom : "Non défini" %></p>
-            <p><span>Adresse : </span><%= user.adresse ? user.adresse : "Non défini" %></p>
-            <p><span>Téléphone : </span><%= user.telephone ? user.telephone : "Non défini" %></p>
+            <p><span>First Name : </span><%= user.prenom ? user.prenom : "Non défini" %></p>
+            <p><span>Last Name : </span><%= user.nom ? user.nom : "Non défini" %></p>
+            <p><span>Adress : </span><%= user.adresse ? user.adresse : "Non défini" %></p>
+            <p><span>Tel : </span><%= user.telephone ? user.telephone : "Non défini" %></p>
             <p><span>Mail : </span><%= user.mail ? user.mail : "Non défini" %></p>
             <p><span>Rôle : </span><%= user.role ? user.role : "Non défini" %></p>
-            <p><span>Nom d'utilisateur : </span><%= user.username ? user.username : "Non défini" %></p>
+            <p><span>Username : </span><%= user.username ? user.username : "Non défini" %></p>
         </div>
 
         <div class="btn-retour">
-            <button onclick="retourBibliotheque()">Retour à la bibliothèque</button>
-            <button onclick="modifierDonnees()">Modifier mes données</button>
-            <button class="btn-supprimer" onclick="supprimerCompte()">Supprimer mon compte</button>
+            <button onclick="retourBibliotheque()">Back to the library</button>
+            <button onclick="modifierDonnees()">Edit my infos</button>
+            <button class="btn-supprimer" onclick="supprimerCompte()">Delete my account</button>
         </div>
     </div>
 

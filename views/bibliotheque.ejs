@@ -83,12 +83,12 @@
             color: #555;
         }
 
-        .disponible {
+        .available {
             color: #28a745;
             font-weight: bold;
         }
 
-        .emprunte {
+        .unavailable {
             color: #dc3545;
             font-weight: bold;
         }
@@ -149,17 +149,17 @@
     <div class="bibliotheque-container">
         <!-- Bouton Mon Compte -->
         <div class="mon-compte">
-            <button onclick="ouvrirMonCompte()">Mon compte</button>
+            <button onclick="ouvrirMonCompte()">My account</button>
         </div>
 
         <div class="logout">
-            <button onclick="deconnexion()">Déconnexion</button>
+            <button onclick="deconnexion()">Logout</button>
         </div>
-        <h1>Bibliothèque</h1>
+        <h1>Library</h1>
 
         <!-- Barre de recherche -->
         <div class="search-bar">
-            <input type="text" id="search-input" placeholder="Rechercher un livre..." oninput="rechercherLivre()">
+            <input type="text" id="search-input" placeholder="Rechercher un livre.." oninput="rechercherLivre()">
         </div>
         <!-- Conteneur pour afficher les livres filtrés -->
         <div id="livre-list">
@@ -187,11 +187,11 @@
             livreList.innerHTML = livresFiltres.map(livre => `
                 <div class="livre">
                     <h2>${livre.titre}</h2>
-                    <p><strong>Auteur :</strong> ${livre.auteur}</p>
-                    <p><strong>Genre :</strong> ${livre.genre}</p>
-                    <p><strong>Année de publication :</strong> ${livre.annee}</p>
-                    <p><strong>État :</strong> 
-                        <span class="${livre.etat === 'Disponible' ? 'disponible' : 'emprunte'}">${livre.etat}</span>
+                    <p><strong>Author :</strong> ${livre.auteur}</p>
+                    <p><strong>Type :</strong> ${livre.genre}</p>
+                    <p><strong>Date of publication :</strong> ${livre.annee_publication}</p>
+                    <p><strong>Availability :</strong> 
+                        <span class="${livre.etat === 'Available' ? 'available' : 'unavailable'}">${livre.etat}</span>
                     </p>
                 </div>
             `).join('');
