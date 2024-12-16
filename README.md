@@ -2,7 +2,7 @@
 
 ## Introduction
 
-**Bibliothèque App** est une application web permettant de gérer les activités d'une bibliothèque, comme l'emprunt et le retour de livres. L'application utilise des technologies modernes côté client et serveur.
+**Bibliothèque App** est une application web permettant de gérer les activités d'une bibliothèque, comme l'emprunt et le retour de livres. L'application utilise des technologies modernes côté client et serveur. La langue choisi pour le projet est l'anglais.
 
 ## Fonctionnalités principales
 
