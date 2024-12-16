@@ -217,8 +217,8 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/edit_profil', (req, res) => {
-    const username = req.session.user.username;
     if(req.session.user){
+        const username = req.session.user.username;
         const query = 'SELECT nom, prenom, adresse, telephone, mail, role, username FROM membre WHERE username = ?'
         mysql.query(query, [username], (err, results, fields) => {
             //console.log(results);
