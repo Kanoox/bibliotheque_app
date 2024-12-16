@@ -114,7 +114,7 @@ app.post('/register', async (req, res) => {
 })
 // Page dashboard, authentication obligatoire
 app.get('/dashboard', (req, res) => {
-    const username = 'test';
+    const username = req.session.user.username;
     if (!req.session.user) {
         return res.redirect('/');
     } else {
