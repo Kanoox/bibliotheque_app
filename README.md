@@ -1,5 +1,3 @@
----
-
 # Documentation du Projet : Bibliothèque App
 
 ## Introduction
