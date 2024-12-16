@@ -2,6 +2,7 @@
 const express = require('express');
 const fs = require('fs');
 const bcrypt = require('bcryptjs'); 
+const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const session = require('express-session'); // Session avec express js
 const path = require('path');
@@ -198,6 +199,10 @@ app.post('/login', async (req, res) => {
             if (isMatch) {
                 //res.status(200).send(`<h1>Authentifaction réussie, ${req.session.user}!</h1><a href="/bibliotheque">Bibliotheque</a>`);
                 req.session.user = { username }; // Stocker les informations de l'utilisateur
+
+                // Générer un token JWT
+                const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
+
                 return res.redirect('/bibliotheque');
             } else {
                 res.status(401).send('Informations d’identification non valides');
@@ -206,6 +211,27 @@ app.post('/login', async (req, res) => {
             console.error('Erreur lors de la comparaison des mots de passe', err.message);
             res.status(500).send('Erreur serveur');
         }
+    });
+});
+
+// Accéder à une route protégée
+app.get('/protected', (req, res) => {
+    // Extraire le token de l'en-tête Authorization
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Ex : "Bearer <token>"
+
+    if (!token) {
+        return res.status(403).json({ message: 'Token manquant.' });
+    }
+
+    // Vérifier le token
+    jwt.verify(token, SECRET_KEY, (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: 'Token invalide.' });
+        }
+
+        // Si tout est OK, retourner les informations protégées
+        res.status(200).json({ message: 'Voici les données protégées.', user });
     });
 });
 
@@ -224,8 +250,7 @@ app.get('/edit_profil', (req, res) => {
             //console.log(results);
             if (err) {
                 console.error('Erreur lors de la récupération des données :', err);
-                res.status(500).send('Erreur serveur.');
-                return;
+                return res.status(500).send('Erreur serveur.');
             }
 
             if (results.length === 0) {
