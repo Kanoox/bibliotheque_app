@@ -6,9 +6,9 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const session = require('express-session'); // Session avec express js
 const path = require('path');
+const cookieParser = require('cookie-parser');
 const app = express();
 require('dotenv').config();
-const SECRET_KEY = process.env.SECRET_KEY;
 
 /* Import perso */
 const getConnection = require('./utils/mysql');
@@ -25,6 +25,10 @@ app.set('views', path.join(__dirname, 'views'));
   next(); // Passe au middleware suivant ou à la route
 });*/
 
+app.use(cookieParser()); // Middleware pour lire les cookies
+app.use(express.json());
+const SECRET_KEY = process.env.SECRET_KEY;
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -34,6 +38,21 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false } // 'secure: true' nécessite HTTPS
 }));
+
+// Middleware de vérification du token
+function verifyToken(req, res, next) {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ message: 'Accès refusé. Aucun token fourni.' });
+    }
+    try {
+        const decoded = jwt.verify(token, SECRET_KEY);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        return res.status(403).json({ message: 'Token invalide.' });
+    }
+}
 
 app.get('/', (req, res) => {
     const error = req.session.error;
@@ -114,7 +133,7 @@ app.post('/register', async (req, res) => {
     }
 })
 // Page dashboard, authentication obligatoire
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', verifyToken, (req, res) => {
     if (!req.session.user) {
         return res.redirect('/');
     } else {
@@ -203,7 +222,15 @@ app.post('/login', async (req, res) => {
                 // Générer un token JWT
                 const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
 
-                return res.redirect('/bibliotheque');
+                // Stocker le token dans un cookie sécurisé (HTTP-only)
+                res.cookie('token', token, {
+                    httpOnly: true, // Empêche l'accès via JavaScript
+                    secure: false, // Activez pour HTTPS
+                    sameSite: 'strict', // Empêche le CSRF
+                    maxAge: 3600000, // 1 heure
+                });
+
+                res.redirect('/protected');
             } else {
                 res.status(401).send('Informations d’identification non valides');
             }
@@ -214,24 +241,21 @@ app.post('/login', async (req, res) => {
     });
 });
 
-// Accéder à une route protégée
-app.get('/protected', (req, res) => {
-    // Extraire le token de l'en-tête Authorization
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Ex : "Bearer <token>"
+// Endpoint pour vérifier le token
+app.get('/protected', verifyToken, (req, res) => {
+    const token = req.cookies.token;
 
-    if (!token) {
-        return res.status(403).json({ message: 'Token manquant.' });
-    }
+    if (!token) return res.status(401).json({ message: 'Non autorisé' });
 
-    // Vérifier le token
-    jwt.verify(token, SECRET_KEY, (err, user) => {
+    // Vérifiez le token
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
         if (err) {
-            return res.status(403).json({ message: 'Token invalide.' });
-        }
+            return res.status(403).json({ message: 'Token invalide' });
+        } 
 
-        // Si tout est OK, retourner les informations protégées
-        res.status(200).json({ message: 'Voici les données protégées.', user });
+        //res.json({ message: 'Accès autorisé', user: req.user });
+
+        return res.redirect('/bibliotheque')
     });
 });
 
